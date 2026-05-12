@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,  PermissionsMixin
 
 class CustomUserMeneger(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -21,7 +21,7 @@ class CustomUserMeneger(BaseUserManager):
             raise ValueError("superuser must have is_superuser status")
         return self.create_user(email, password, **extra_fields)
 
-class CustomeUser(AbstractBaseUser):
+class CustomeUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICE = (
         ("customer","Customer"),
         ("curier","Curier"),
@@ -32,7 +32,7 @@ class CustomeUser(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_super = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=ROLE_CHOICE, default="admin")
 
     objects = CustomUserMeneger()
