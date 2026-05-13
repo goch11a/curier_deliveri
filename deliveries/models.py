@@ -59,11 +59,11 @@ class Parcel(models.Model):
     receiver_adress = models.TextField()
     curier = models.ForeignKey(CustomeUser, related_name="curier", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    delivered_at = models.DateTimeField()
+    delivered_at = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"'{self.title}' from {self.sender.email}"
 
 class DelveryProof(models.Model):
-    parcel = models.OneToOneField(Parcel, related_name="parcel", on_delete=models.CASCADE)
+    parcel = models.OneToOneField(Parcel, related_name="delivery_proof", on_delete=models.CASCADE)
     image = models.URLField(max_length=200)
-
-

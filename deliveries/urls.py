@@ -26,7 +26,7 @@ schema_view = get_schema_view(
 root = DefaultRouter()
 root.register(r"user", CustomeUserViewset)
 root.register(r"parcel", ParcelViewset)
-root.register(r"delivery", DelveryProofViewset)
+root.register(r"proof", DelveryProofViewset)
 
 
 urlpatterns = [
@@ -37,5 +37,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-]
+]   
 
