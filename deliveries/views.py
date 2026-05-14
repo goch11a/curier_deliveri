@@ -4,26 +4,43 @@ from .models import CustomeUser, Parcel, DelveryProof
 from .serializers import CustomeUserSerializer, ParcelSerializer, DelveryProofSerializer
 from rest_framework.response import Response
 import cloudinary.uploader
-from rest_framework.views import APIView
-
+from .permissions import IsAdmin, AddParcelPermission, DeleteParcelPermission, ReadParcelPermission, ReadUserPermission, DeleteUserPermission, AddUserPermission
 
    
 
 class CustomeUserViewset(ModelViewSet):
     queryset = CustomeUser.objects.all()
     serializer_class = CustomeUserSerializer
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_permissions(self):
+        if self.action == "create":
+            permission_classes = [AddUserPermission]
+        elif self.action == "destroy":
+            permission_classes = [DeleteUserPermission]    
+        elif self.action in ["list", "retrieve"]:
+            permission_classes = [ReadUserPermission]
+        else:
+            permission_classes = [IsAdmin]    
+
+        return [permissions() for permissions in permission_classes]    
+
     
 
 class ParcelViewset(ModelViewSet):
     queryset = Parcel.objects.all()
     serializer_class = ParcelSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            permission_classes = [AddParcelPermission]
+        elif self.action == "destroy":
+            permission_classes = [DeleteParcelPermission]    
+        elif self.action in ["list", "retrieve"]:
+            permission_classes = [ReadParcelPermission]
+        else:
+            permission_classes = [IsAdmin]    
+
+        return [permissions() for permissions in permission_classes]  
 
 class DelveryProofViewset(ModelViewSet):
     queryset = DelveryProof.objects.all()

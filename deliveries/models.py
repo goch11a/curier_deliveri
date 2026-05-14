@@ -22,6 +22,10 @@ class CustomUserMeneger(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class CustomeUser(AbstractBaseUser, PermissionsMixin):
+    admin = "admin"
+    customer = "customer"
+    curier = "curier"
+    
     ROLE_CHOICE = (
         ("customer","Customer"),
         ("curier","Curier"),
